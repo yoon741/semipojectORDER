@@ -1,0 +1,75 @@
+{% extends 'include/base.html' %}
+
+{% block title %}
+세미프로젝트 - 갤러리 글쓰기
+{% endblock %}
+
+{% block style %}
+<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
+        async defer></script>
+<script type="text/javascript">
+    var onloadCallback = () => {
+        grecaptcha.render('captcha', { 'sitekey' : '' });
+    };
+</script>
+<style>
+    form { width: 450px; margin: 50px auto; }
+    th { width: 150px; }
+    tr { height: 35px; }
+    tr:nth-child(3) { vertical-align: top; }
+    tr:nth-child(4) { vertical-align: top; }
+    #listbtn { margin-left: 115px; }
+    input, textarea, button { padding: 5px; }
+
+</style>
+{% endblock %}
+
+{% block main %}
+    <main>
+        <h2>갤러리 글쓰기</h2>
+        <form name="galleryfrm" enctype='multipart/form-data' method="post">
+            <table>
+                <tr><th>제목</th><td><input type="text" name="title" id="title" required></td></tr>
+                <tr><th>작성자</th><td><input type="text" name="userid" id="userid" value="yoon123" readonly></td></tr>
+                <tr><th>본문</th><td><textarea name="contents" id="contents" rows="10" cols="45" required></textarea></td></tr>
+                <tr><th>첨부파일</th><td>
+                    <div><input type="file" name="files" id="file1" required></div>
+                    <div><input type="file" name="files" id="file2"></div>
+                    <div><input type="file" name="files" id="file3"></div>
+                </td></tr>
+                <tr><th>자동가입방지</th><td><div id="captcha"></div></td></tr>
+                <tr><td colspan="2">
+                    <button type="button" id="listbtn" onclick="location.href='/gallery/list/1'">리스트로</button>
+                    <button type="submit" id="writeokbtn">입력완료</button>
+                </td></tr>
+            </table>
+        </form>
+    </main>
+{% endblock %}
+
+{% block script %}
+<script>
+    let galleryfrm = document.galleryfrm;
+    galleryfrm.addEventListener('submit', async (e) => {
+       e.preventDefault();
+
+       if (grecaptcha.getResponse() === '') {
+           alert('자동가입방지를 클릭하세요!');
+           return;
+       }
+
+       const formData = new FormData(galleryfrm);
+        // multipart 형식으로 전송해야 하기 때문에
+        // formData.append(키, 값) 형태로 추가
+       formData.append('captcha', grecaptcha.getResponse());
+
+       await fetch('/gallery/write', {
+           method: 'post',
+           body: formData,
+           redirect: 'follow'
+       }).then((res) => {
+           if (res.redirected) location.href = res.url;
+       });                              //응답이 넘어오면 어떻게 처리할것인지
+    });
+</script>
+{% endblock %}
