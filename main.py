@@ -11,6 +11,8 @@ from app.dbfactory import db_startup, db_shutdown
 from app.routes.board import board_router
 from app.routes.member import member_router
 from app.routes.gallery import gallery_router
+from app.routes.order import order_router
+from app.routes.shop import shop_router
 from app.routes.pds import pds_router
 
 @asynccontextmanager
@@ -32,6 +34,8 @@ app.include_router(member_router, prefix='/member')
 app.include_router(board_router, prefix='/board')
 app.include_router(gallery_router, prefix='/gallery')
 app.include_router(pds_router, prefix='/pds')
+app.include_router(shop_router, prefix='/shop')
+app.include_router(order_router, prefix='/order')
 
 @app.get("/", response_class=HTMLResponse)
 async def index(req: Request):

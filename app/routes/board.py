@@ -78,7 +78,7 @@ async def write(req: Request):
     if 'logined_uid' not in req.session:
         return RedirectResponse('/member/login', 303)
 
-    return templates.TemplateResponse('board/write.html', {'request': req})  # 로그인이 되어있을때만 허용
+    return templates.TemplateResponse('board/insert_product.html', {'request': req})  # 로그인이 되어있을때만 허용
 
 
 @board_router.get('/view/{bno}', response_class=HTMLResponse)

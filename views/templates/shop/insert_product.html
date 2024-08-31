@@ -1,0 +1,61 @@
+{% extends 'include/base.html' %}
+
+{% block title %}
+세미프로젝트 - 갤러리 글쓰기
+{% endblock %}
+
+{% block style %}
+
+<style>
+    form { width: 450px; margin: 50px auto; }
+    th { width: 150px; }
+    tr { height: 35px; }
+    tr:nth-child(3) { vertical-align: top; }
+    tr:nth-child(4) { vertical-align: top; }
+    #listbtn { margin-left: 115px; }
+    input, textarea, button { padding: 5px; }
+
+</style>
+{% endblock %}
+
+{% block main %}
+    <main>
+        <h2>갤러리 글쓰기</h2>
+        <form name="productfrm" enctype='multipart/form-data' method="post">
+            <table>
+                <tr><th>상품명</th><td><input type="text" name="prdname" id="prdname" required></td></tr>
+                <tr><th>가격</th><td><input type="text" name="price" id="price"></td></tr>
+                <tr><th>타입</th><td><textarea name="type" id="type" rows="10" cols="45" required></textarea></td></tr>
+                <tr><th>상품설명</th><td><textarea name="description" id="description" rows="10" cols="45" required></textarea></td></tr>
+                <tr><th>상품사진</th><td>
+                    <div><input type="file" name="files" id="file1" required></div>
+                    <div><input type="file" name="files" id="file2"></div>
+                    <div><input type="file" name="files" id="file3"></div>
+                </td></tr>
+                <tr><td colspan="2">
+                    <button type="button" id="listbtn" onclick="location.href='/shop/item_gallery/1'">shop으로</button>
+                    <button type="submit" id="writeokbtn">상품입력완료</button>
+                </td></tr>
+            </table>
+        </form>
+    </main>
+{% endblock %}
+
+{% block script %}
+<script>
+    let productfrm = document.productfrm;
+    productfrm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(productfrm);
+
+        await fetch('/product/write', {
+            method: 'post',
+            body: formData,
+            redirect: 'follow'
+        }).then((res) => {
+            if (res.redirected) location.href = res.url;
+        });
+    });
+</script>
+{% endblock %}

@@ -19,7 +19,7 @@ templates = Jinja2Templates(directory='views/templates')
 
 @pds_router.get('/write', response_class=HTMLResponse)
 async def write(req: Request):
-    return templates.TemplateResponse('pds/write.html', {'request': req})
+    return templates.TemplateResponse('pds/insert_product.html', {'request': req})
 
 @pds_router.get('/view/{pno}', response_class=HTMLResponse)
 async def view(req: Request):
